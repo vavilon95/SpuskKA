@@ -22,12 +22,19 @@ public class KA {
     public static double w = 7.292115855*Math.pow(10,-5);//Угловая скорость вращ Земли
     public static double K = 0.3; // Аэродинамическое качество
     //5 вариант
-    public static double x = 4206.138;
-    public static double y = 2914.179;
-    public static double z = 3960.598;
-    public static double Vx = -5.918745;
-    public static double Vy = 3.008711;
-    public static double Vz = 3.746175;
+//    public static double x = 4206.138;
+//    public static double y = 2914.179;
+//    public static double z = 3960.598;
+//    public static double Vx = -5.918745;
+//    public static double Vy = 3.008711;
+//    public static double Vz = 3.746175;
+    public static double x =5065.124;
+    public static double y = 2373.486;
+    public static double z = 3253.021;
+    public static double Vx = -4.857479;
+    public static double Vy = 3.565160;
+    public static double Vz = 4.695924;
+
     public static double yvx = 45*(Math.PI/180);// Угол входа
     //Таблица для плотности
     public static double[][] Plot =
@@ -48,6 +55,7 @@ public class KA {
     public static double Tm = 0.0;//абсолют температура
     public static double Fniz = 0.0;//Нижняя граница высоты
     public static double F = 0.0;//Высота КА
+    public static double Fgeom = 0.0;//Высота КА
     public static double P = 0.0;//Давление атмосферы
     public static void main(String args[]){
         for(int i=0;i<Plot.length;i++){
@@ -56,7 +64,9 @@ public class KA {
         }
         double h=0.2;
         double time0 = 0;
-        double visota0 = 100;
+        double h1 = Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2))-
+                Rekv*(1-(fcg*Math.pow(z,2))/(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2)));
+        double visota0  = h1;
 
         ArrayList<Double> time = new ArrayList<Double>();
         ArrayList<Double> Visota = new ArrayList<Double>();
@@ -94,7 +104,7 @@ public class KA {
 //        TextIn(str,"testing.txt");
         while(visota0>5){
             vect =SumVec(vect,UmChis(Fun(vect),h));
-            visota0 =F;
+            visota0 =Fgeom;
             Visota.add(visota0);
             LX.add(vect[0]);
             LY.add(vect[1]);
@@ -218,9 +228,9 @@ public class KA {
         double x = xyz[0];
         double y= xyz[1];
         double z = xyz[2];
-        double h = Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2))-
+        Fgeom = Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2))-
                 Rekv*(1-(fcg*Math.pow(z,2))/(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2)));
-        F = h*Rysl/(h+Rysl);
+        F = Fgeom*Rysl/(Fgeom+Rysl);
         return Fpo(F);
     }
     public static double Fpo(double F){
