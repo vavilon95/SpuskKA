@@ -11,8 +11,8 @@ import static java.lang.Math.*;
 public class KA {
     public static double Rysl = 6356.766; //Условный радиус Земли метры км
     public static double g0 = 9.80665/1000;//ускор своб пад км
-    public static double R = 287.05287;//Газ пост
-    public static double g0R = 0.0341632188*1000;//км
+    public static double R = 287.05287/1000;//Газ пост
+    public static double g0R = 0.0341632188*0.001;//км
     public static double Rekv = 6378.1; //Экваториальный радиус Земли км
     public static double fcg = 0.003352824419;//Сжатие Земли
     public static double u = 398600;//грав пост км
@@ -28,7 +28,7 @@ public class KA {
     public static double Vx = -5.918745;
     public static double Vy = 3.008711;
     public static double Vz = 3.746175;
-    public static double yvx = 45;// Угол входа
+    public static double yvx = 45*(Math.PI/180);// Угол входа
     //Таблица для плотности
     public static double[][] Plot =
                     {{0,     288.15,  -0.0065,  1.24915236 *Math.pow(10,-1)},
@@ -61,12 +61,25 @@ public class KA {
         ArrayList<Double> time = new ArrayList<Double>();
         ArrayList<Double> Visota = new ArrayList<Double>();
         ArrayList<Double> Atmor = new ArrayList<Double>();
-
+        ArrayList<Double> LX = new ArrayList<Double>();
+        ArrayList<Double> LY = new ArrayList<Double>();
+        ArrayList<Double> LZ = new ArrayList<Double>();
+        ArrayList<Double> LVX = new ArrayList<Double>();
+        ArrayList<Double> LVY = new ArrayList<Double>();
+        ArrayList<Double> LVZ = new ArrayList<Double>();
+        ArrayList<Double> LV = new ArrayList<Double>();
         time.add(time0);
         Visota.add(visota0);
         Atmor.add(0.0);
         int i = 0;
         double[] vect = {x,y,z,Vx,Vy,Vz};
+        LX.add(x);
+        LY.add(y);
+        LZ.add(z);
+        LVX.add(Vx);
+        LVY.add(Vy);
+        LVZ.add(Vz);
+        LV.add(Math.sqrt(Math.pow(Vx,2)+Math.pow(Vy,2)+Math.pow(Vz,2)));
 //        double k = 100;
 //        while(k>0){
 //            double p = Fpo(k);
@@ -79,10 +92,17 @@ public class KA {
 //            str = str +Visota.get(ii)+";"+Atmor.get(ii)+"\n";
 //        }
 //        TextIn(str,"testing.txt");
-        while(time0<2000){
+        while(visota0>5){
             vect =SumVec(vect,UmChis(Fun(vect),h));
             visota0 =F;
             Visota.add(visota0);
+            LX.add(vect[0]);
+            LY.add(vect[1]);
+            LZ.add(vect[2]);
+            LVX.add(vect[3]);
+            LVY.add(vect[4]);
+            LVZ.add(vect[5]);
+            LV.add(Math.sqrt(Math.pow(vect[3],2)+Math.pow(vect[4],2)+Math.pow(vect[5],2)));
             //System.out.println("Visota = "+visota0);
             time0 = time0+0.2;
             time.add(time0);
@@ -94,7 +114,7 @@ public class KA {
         }
         String str = "";
         for(int ii=0;ii<Visota.size();ii++){
-            str = str + time.get(ii)+";"+Visota.get(ii)+";"+Atmor.get(ii)+"\n";
+            str = str + time.get(ii)+";"+Visota.get(ii)+";"+Atmor.get(ii)+";"+LX.get(ii)+";"+LY.get(ii)+";"+LZ.get(ii)+";"+LVX.get(ii)+";"+LVY.get(ii)+";"+LVZ.get(ii)+";"+LV.get(ii)+"\n";
         }
         TextIn(str,"testing.txt");
 //        for(int i=100;i>=5;i--){
@@ -182,15 +202,15 @@ public class KA {
         P = PO(xyz);
         //System.out.println("p = "+P);
         Exit[3] =((-u/Math.pow(r,3))*x-cx*(Smid/(2*m))*P*V*Vx+
-                K*cx*(Smid/(2*m))*P*Math.pow(V,2)*(m1*Math.cos(yvx*0.0174533)+l1*Math.sin(yvx*0.0174533))
+                K*cx*(Smid/(2*m))*P*Math.pow(V,2)*(m1*Math.cos(yvx)+l1*Math.sin(yvx))
                 +x*Math.pow(w,2)+2*w*Vy);
 
         Exit[4] = ((-u/Math.pow(r,3))*y-cx*(Smid/(2*m))*P*V*Vy+
-                K*cx*(Smid/(2*m))*P*Math.pow(V,2)*(m2*Math.cos(yvx*0.0174533)+l2*Math.sin(yvx*0.0174533))
+                K*cx*(Smid/(2*m))*P*Math.pow(V,2)*(m2*Math.cos(yvx)+l2*Math.sin(yvx))
                 +y*Math.pow(w,2)-2*w*Vx);
 
         Exit[5] =( (-u/Math.pow(r,3))*z-cx*(Smid/(2*m))*P*V*Vz+
-                K*cx*(Smid/(2*m))*P*Math.pow(V,2)*(m3*Math.cos(yvx*0.0174533)+l3*Math.sin(yvx*0.0174533)));
+                K*cx*(Smid/(2*m))*P*Math.pow(V,2)*(m3*Math.cos(yvx)+l3*Math.sin(yvx)));
 
         return Exit;
     }
@@ -222,7 +242,7 @@ public class KA {
         for(int i=0;i<Plot.length-1;i++){
             if((F>=Plot[i][0])&(F<=Plot[i+1][0])){
                 Fniz = Plot[i][0];
-                p = Plot[i][0]*g0;//Плотность нижней границы
+                p = Plot[i][3]*g0;//Плотность нижней границы
                 am = Plot[i][2];//Градниент температуры
                 Tm = Plot[i][1];//абсолют температура
                 break;
