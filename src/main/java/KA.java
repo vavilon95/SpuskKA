@@ -31,10 +31,10 @@ public class KA {
     public static double yvx = 45;// Угол входа
     //Таблица для плотности
     public static double[][] Plot =
-                    {{0,     288.15,  -0.0065,  1.24915236*Math.pow(10,-1)},
-                    {11,     216.65,   0,       3.71093080*Math.pow(10,-1)},
+                    {{0,     288.15,  -0.0065,  1.24915236 *Math.pow(10,-1)},
+                    {11,     216.65,   0,       3.71093080 *Math.pow(10,-1)},
                     {20,     216.65,   0.0010,  8.97702069 *Math.pow(10,-3)},
-                    {32,     228.65,   0.0028,  1.34856449*Math.pow(10,-3)},
+                    {32,     228.65,   0.0028,  1.34856449 *Math.pow(10,-3)},
                     {47,     270.65,   0,       1.45566528 *Math.pow(10,-4)},
                     {51,     270.65,  -0.0028,  8.78587489 *Math.pow(10,-5)},
                     {71,     214.65,  -0.0020,  6.54764879 *Math.pow(10,-6)},
@@ -63,22 +63,22 @@ public class KA {
         ArrayList<Double> Atmor = new ArrayList<Double>();
 
         time.add(time0);
-        //Visota.add(visota0);
-        //Atmor.add(0.0);
+        Visota.add(visota0);
+        Atmor.add(0.0);
         int i = 0;
         double[] vect = {x,y,z,Vx,Vy,Vz};
-        double k = 100;
-        while(k>0){
-            double p = Fpo(k);
-            Visota.add(k);
-            Atmor.add(p);
-            k=k-0.035;
-        }
-        String str = "";
-        for(int ii=0;ii<Visota.size();ii++){
-            str = str +Visota.get(ii)+";"+Atmor.get(ii)+"\n";
-        }
-        TextIn(str,"testing.txt");
+//        double k = 100;
+//        while(k>0){
+//            double p = Fpo(k);
+//            Visota.add(k);
+//            Atmor.add(p);
+//            k=k-0.035;
+//        }
+//        String str = "";
+//        for(int ii=0;ii<Visota.size();ii++){
+//            str = str +Visota.get(ii)+";"+Atmor.get(ii)+"\n";
+//        }
+//        TextIn(str,"testing.txt");
         while(time0<2000){
             vect =SumVec(vect,UmChis(Fun(vect),h));
             visota0 =F;
@@ -92,11 +92,11 @@ public class KA {
 //                System.out.println();
 //            }
         }
-//        String str = "";
-//        for(int ii=0;ii<Visota.size();ii++){
-//            str = str + time.get(ii)+";"+Visota.get(ii)+";"+Atmor.get(ii)+"\n";
-//        }
-//        TextIn(str,"testing.txt");
+        String str = "";
+        for(int ii=0;ii<Visota.size();ii++){
+            str = str + time.get(ii)+";"+Visota.get(ii)+";"+Atmor.get(ii)+"\n";
+        }
+        TextIn(str,"testing.txt");
 //        for(int i=100;i>=5;i--){
 //            X[j] = i;
 //
@@ -212,6 +212,7 @@ public class KA {
         }else{
             po = p*Math.exp(g0R*((Fniz-F)/Tm));
         }
+        //po = po/Math.pow(1000,2);
         if(po==0.0){
             System.out.println();
         }
