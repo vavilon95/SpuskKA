@@ -10,9 +10,9 @@ import static java.lang.Math.*;
  */
 public class KA {
     public static double Rysl = 6356.766; //Условный радиус Земли метры км
-    public static double g0 = 9.80665/1000;//ускор своб пад км
-    public static double R = 287.05287/1000;//Газ пост
-    public static double g0R = 0.0341632188*0.001;//км
+    public static double g0 = 9.80665*Math.pow(10,-3);//ускор своб пад км
+    public static double R = 287.05287*Math.pow(10,-3);//Газ пост
+    public static double g0R = (g0/R)/Math.pow(10,-3);//км
     public static double Rekv = 6378.1; //Экваториальный радиус Земли км
     public static double fcg = 0.003352824419;//Сжатие Земли
     public static double u = 398600;//грав пост км
@@ -37,19 +37,32 @@ public class KA {
 
     public static double yvx = 45*(Math.PI/180);// Угол входа
     //Таблица для плотности
+//    public static double[][] Plot =
+//                    {{0,     288.15,  -0.0065,  1.24915236 *Math.pow(10,-1)},
+//                    {11,     216.65,   0,       3.71093080 *Math.pow(10,-2)},
+//                    {20,     216.65,   0.0010,  8.97702069 *Math.pow(10,-3)},
+//                    {32,     228.65,   0.0028,  1.34856449 *Math.pow(10,-3)},
+//                    {47,     270.65,   0,       1.45566528 *Math.pow(10,-4)},
+//                    {51,     270.65,  -0.0028,  8.78587489 *Math.pow(10,-5)},
+//                    {71,     214.65,  -0.0020,  6.54764879 *Math.pow(10,-6)},
+//                    {80,     196.65,  -0.0020,  1.60099524 *Math.pow(10,-6)},
+//                    {85,     186.65,   0,       6.91423676 *Math.pow(10,-7)},
+//                    {94,     186.65,   0.0030,  1.33266712 *Math.pow(10,-7)},
+//                    {102.45, 212.00,   0.0110,  2.74594280 *Math.pow(10,-8)},
+//                    {117.77, 380.60,   0.0078,  2.48852564 *Math.pow(10,-9)}};
     public static double[][] Plot =
                     {{0,     288.15,  -0.0065,  1.24915236 *Math.pow(10,-1)},
-                    {11,     216.65,   0,       3.71093080 *Math.pow(10,-1)},
-                    {20,     216.65,   0.0010,  8.97702069 *Math.pow(10,-3)},
-                    {32,     228.65,   0.0028,  1.34856449 *Math.pow(10,-3)},
-                    {47,     270.65,   0,       1.45566528 *Math.pow(10,-4)},
-                    {51,     270.65,  -0.0028,  8.78587489 *Math.pow(10,-5)},
-                    {71,     214.65,  -0.0020,  6.54764879 *Math.pow(10,-6)},
-                    {80,     196.65,  -0.0020,  1.60099524 *Math.pow(10,-6)},
-                    {85,     186.65,   0,       6.91423676 *Math.pow(10,-7)},
-                    {94,     186.65,   0.0030,  1.33266712 *Math.pow(10,-7)},
-                    {102.45, 212.00,   0.0110,  2.74594280 *Math.pow(10,-8)},
-                    {117.77, 380.60,   0.0078,  2.48852564 *Math.pow(10,-9)}};
+                    {11,     216.65,  -0.0065,  3.71093080 *Math.pow(10,-2)},
+                    {20,     216.65,   0,       8.97702069 *Math.pow(10,-3)},
+                    {32,     228.65,   0.0010,  1.34856449 *Math.pow(10,-3)},
+                    {47,     270.65,   0.0028,  1.45566528 *Math.pow(10,-4)},
+                    {51,     270.65,   0,       8.78587489 *Math.pow(10,-5)},
+                    {71,     214.65,  -0.0028,  6.54764879 *Math.pow(10,-6)},
+                    {80,     196.65,  -0.0017,  1.60099524 *Math.pow(10,-6)},
+                    {85,     186.65,  -0.0020,  6.91423676 *Math.pow(10,-7)},
+                    {94,     186.65,   0,       1.33266712 *Math.pow(10,-7)},
+                    {102.45, 212.00,   0.0030,  2.74594280 *Math.pow(10,-8)},
+                    {117.77, 380.60,   0.0110,  2.48852564 *Math.pow(10,-9)}};
     public static double p = 0.0;//Плотность нижней границы
     public static double am = 0.0;//Градниент температуры
     public static double Tm = 0.0;//абсолют температура
@@ -58,10 +71,10 @@ public class KA {
     public static double Fgeom = 0.0;//Высота КА
     public static double P = 0.0;//Давление атмосферы
     public static void main(String args[]){
-        for(int i=0;i<Plot.length;i++){
-            Plot[i][2] = Plot[i][2]*1000;
-            Plot[i][3] = Plot[i][3]*Math.pow(1000,4);
-        }
+//        for(int i=0;i<Plot.length;i++){
+//            //Plot[i][2] = Plot[i][2]*1000;
+//            //Plot[i][3] = Plot[i][3]*Math.pow(1000,4);
+//        }
         double h=0.2;
         double time0 = 0;
         double h1 = Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2))-
@@ -250,11 +263,11 @@ public class KA {
     }
     public static void Tab(double F){
         for(int i=0;i<Plot.length-1;i++){
-            if((F>=Plot[i][0])&(F<=Plot[i+1][0])){
+            if((F>=Plot[i][0])&(F<Plot[i+1][0])){
                 Fniz = Plot[i][0];
-                p = Plot[i][3]*g0;//Плотность нижней границы
-                am = Plot[i][2];//Градниент температуры
                 Tm = Plot[i][1];//абсолют температура
+                am = Plot[i][2]/Math.pow(10,-3);//Градниент температуры
+                p = Plot[i][3]*g0/Math.pow(10,-12);//Плотность нижней границы
                 break;
             }
         }
