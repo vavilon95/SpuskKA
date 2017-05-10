@@ -61,12 +61,13 @@ public class KA {
         ArrayList<Double> time = new ArrayList<Double>();
         ArrayList<Double> Visota = new ArrayList<Double>();
         ArrayList<Double> Atmor = new ArrayList<Double>();
-
+        ArrayList<Double> Skor = new ArrayList<Double>();
         time.add(time0);
         Visota.add(visota0);
         Atmor.add(0.0);
         int i = 0;
         double[] vect = {x,y,z,Vx,Vy,Vz};
+        Skor.add(Math.sqrt(Math.pow(Vx,2)+Math.pow(Vy,2)+Math.pow(Vz,2)));
 //        double k = 100;
 //        while(k>0){
 //            double p = Fpo(k);
@@ -87,6 +88,7 @@ public class KA {
             time0 = time0+0.2;
             time.add(time0);
             Atmor.add(P);
+            Skor.add(Math.sqrt(Math.pow(Vx,2)+Math.pow(Vy,2)+Math.pow(Vz,2)));
             i++;
 //            if(i==145){
 //                System.out.println();
@@ -94,7 +96,7 @@ public class KA {
         }
         String str = "";
         for(int ii=0;ii<Visota.size();ii++){
-            str = str + time.get(ii)+";"+Visota.get(ii)+";"+Atmor.get(ii)+"\n";
+            str = str + time.get(ii)+";"+Visota.get(ii)+";"+Atmor.get(ii)+";"+Skor.get(ii)+"\n";
         }
         TextIn(str,"testing.txt");
 //        for(int i=100;i>=5;i--){
