@@ -44,7 +44,7 @@ public class KA {
     public static double Vy = 3.565160;
     public static double Vz = 4.695924;
 
-    public static double yvx = 45 ;// Угол входа
+    public static double yvx = 45*(Math.PI/180);// Угол входа
     //Таблица для плотности
     public static double[][] Plot =
                     {{0,     288.15,  -0.0065,  1.24915236 *Math.pow(10,-1)},
@@ -189,9 +189,9 @@ public class KA {
                 double[] ve2 =SumVec(ve, UmChis(FunUgl(ve,u), h));;// FunUgl(ve,u);
                 double[] FiLa = GetFila(new double[]{ve2[0],ve2[1],ve2[2]});
                 double cev = (FiLa[0]*(180/Math.PI) - FiLa1[0]*(180/Math.PI))*RZ;
-                double vost = (FiLa[0] - FiLa1[1])*RZ*Math.cos(FiLa1[0]);
+                double vost = (FiLa[0]*(180/Math.PI) - FiLa1[1]*(180/Math.PI))*RZ*Math.cos(FiLa1[0])*(180/Math.PI);
                 P = PO(new double[]{ve2[0],ve2[1],ve2[2]});
-                System.out.println("P = "+P);
+                //System.out.println("P = "+P);
                 v = Math.sqrt(Math.pow(ve2[3], 2) + Math.pow(ve2[4], 2) + Math.pow(ve2[5], 2));
                 double N = cx*Math.sqrt(1+Math.pow(K,2))*((P*Math.pow(v,2)*Smid)/(2*m*g0));
                 str = str + u+";"+vost+";"+cev+";"+N+"\n";
