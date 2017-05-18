@@ -23,12 +23,12 @@ public class KA {
     public static double w = 7.292115855 * Math.pow(10, -5);//Угловая скорость вращ Земли
     public static double K = 0.3; // Аэродинамическое качество
     //5 вариант
-//    public static double x = 4206.138;
-//    public static double y = 2914.179;
-//    public static double z = 3960.598;
-//    public static double Vx = -5.918745;
-//    public static double Vy = 3.008711;
-//    public static double Vz = 3.746175;
+    public static double x = 4206.138;
+    public static double y = 2914.179;
+    public static double z = 3960.598;
+    public static double Vx = -5.918745;
+    public static double Vy = 3.008711;
+    public static double Vz = 3.746175;
     //6 вариант
 //    public static double x = 3701.992;
 //    public static double y = 3158.130;
@@ -37,14 +37,14 @@ public class KA {
 //    public static double Vy = 2.661533;
 //    public static double Vz = 3.164187;
     //Вариант хз
-    public static double x = 5065.124;
-    public static double y = 2373.486;
-    public static double z = 3253.021;
-    public static double Vx = -4.857479;
-    public static double Vy = 3.565160;
-    public static double Vz = 4.695924;
+//    public static double x = 5065.124;
+//    public static double y = 2373.486;
+//    public static double z = 3253.021;
+//    public static double Vx = -4.857479;
+//    public static double Vy = 3.565160;
+//    public static double Vz = 4.695924;
 
-    public static double yvx = 45 ;// Угол входа
+    public static double yvx = 45;// Угол входа
     //Таблица для плотности
     public static double[][] Plot =
                     {{0,     288.15,  -0.0065,  1.24915236 *Math.pow(10,-1)},
@@ -91,6 +91,7 @@ public class KA {
         ArrayList<Double> n = new ArrayList<Double>();
         ArrayList<double[]> GeogrKor = new ArrayList<double[]>();
         ArrayList<double[]> ProvSost = new ArrayList<double[]>();
+        ArrayList<double[]> ProvBuf = new ArrayList<double[]>();
         ArrayList<Integer> ProvSostV = new ArrayList<Integer>();
         time.add(time0);
         Visota.add(visota0);
@@ -121,19 +122,28 @@ public class KA {
 //        }
 //        TextIn(str,"testing.txt");
         int o = 50;
-
+        double[] buf = null;
+        double[] tmp = null;
         while (visota0 > 5) {
-            vect = SumVec(vect, UmChis(Fun(vect), h));
-            if((visota0>o)&(visota0<=o+0.1)&(o>=10)){
+            buf = vect;
+            //vect = SumVec(vect, UmChis(Fun(vect), h));
+            vect = runge(vect,45);
+            if((visota0<o)&(o>=10)){
                 ProvSost.add(vect);
+                ProvBuf.add(buf);
                 ProvSostV.add(o);
 //                System.out.println("Высота = "+o);
 //                System.out.println("Высота реал = "+visota0);
                 // System.out.println(vect[0]+" "+vect[1]+" "+vect[2]);
                 o = o - 5;
             }
+            tmp = vect;
+
             Fil = GetFila(new double[]{vect[0],vect[1],vect[2]});
             GeogrKor.add(new double[]{Fil[0]*(180/Math.PI),Fil[1]*(180/Math.PI)});
+            if(visota0<20){
+                //System.out.println(Fil[0]*(180/Math.PI)+";"+Fil[1]*(180/Math.PI));
+            }
             visota0 = Fgeom;
             Visota.add(visota0);
             LX.add(vect[0]);
@@ -147,6 +157,7 @@ public class KA {
             //System.out.println("Visota = "+visota0);
             time0 = time0 + 0.2;
             time.add(time0);
+            P = PO(new double[]{vect[0],vect[1],vect[2]});
             Atmor.add(P);
             i++;
             double N = cx*Math.sqrt(1+Math.pow(K,2))*((P*Math.pow(v,2)*Smid)/(2*m*g0));
@@ -180,22 +191,53 @@ public class KA {
         double[] Ugl = new double[]{-180, -150, -120, -90, -60, -30, -15, 0,15, 30, 60, 90, 120, 150, 180};
         str = "";
         int ii=0;
+        //double[] ve_ = tmp;
+        //double[] Dima = new double[]{1644.3154160063766, 3841.0247677715925, 4868.772937918053, -4.2695073602414535, 1.2171817484444023, 0.30248489408059825};
         for(double[] ve:ProvSost){
             str = str+"Высота = "+ProvSostV.get(ii)+"\n";
-            ii++;
+
+            //double[] FiLa1 = GetFila(new double[]{Dima[0],Dima[1],Dima[2]});
+//            ve = new double[]{1644.3154160063766, 3841.0247677715925, 4868.772937918053, -4.2695073602414535, 1.2171817484444023,
+//                    0.30248489408059825};
+//            double[] ve_0 = runge(ve,45);
+//            double[] FiLa_0 = GetFila(new double[]{ve_0[0],ve_0[1],ve_0[2]});
+//            for(double u:Ugl){
+//                double[] ve_0_ = runge(ve_0,u);
+//                double[] FiLa_01 = GetFila(new double[]{ve_0_[0],ve_0_[1],ve_0_[2]});//*(180/Math.PI)
+//                double cev_0 = ((FiLa_01[0] - FiLa_0[0])*180/Math.PI)*RZ;
+//                double vost_0 = ((FiLa_01[1]- FiLa_0[1])*180/Math.PI)*RZ*Math.cos(FiLa_0[0]);
+//                System.out.println("cev = "+cev_0+" vost_0 = "+vost_0+"\n");
+//            }
+            //ve = runge(ve,45);
             double[] FiLa1 = GetFila(new double[]{ve[0],ve[1],ve[2]});
             str = str + "Угол;Вост;Сев;n"+"\n";
             for(double u:Ugl){
-                double[] ve2 =SumVec(ve, UmChis(FunUgl(ve,u), h));;// FunUgl(ve,u);
-                double[] FiLa = GetFila(new double[]{ve2[0],ve2[1],ve2[2]});
-                double cev = (FiLa[0]*(180/Math.PI) - FiLa1[0]*(180/Math.PI))*RZ;
-                double vost = (FiLa[0] - FiLa1[1])*RZ*Math.cos(FiLa1[0]);
-                P = PO(new double[]{ve2[0],ve2[1],ve2[2]});
-                System.out.println("P = "+P);
-                v = Math.sqrt(Math.pow(ve2[3], 2) + Math.pow(ve2[4], 2) + Math.pow(ve2[5], 2));
+                double[] ve_0_ = runge(ve,u);
+                double[] FiLa_01 = GetFila(new double[]{ve_0_[0],ve_0_[1],ve_0_[2]});//*(180/Math.PI)
+                double cev_0 = ((FiLa_01[0] - FiLa1[0])*180/Math.PI)*RZ;
+                double vost_0 = ((FiLa_01[1]- FiLa1[1])*180/Math.PI)*RZ*Math.cos(FiLa1[0]);
+                //System.out.println("cev = "+cev_0+" vost_0 = "+vost_0+"\n");
+
+                P = PO(new double[]{ve_0_[0],ve_0_[1],ve_0_[2]});
                 double N = cx*Math.sqrt(1+Math.pow(K,2))*((P*Math.pow(v,2)*Smid)/(2*m*g0));
-                str = str + u+";"+vost+";"+cev+";"+N+"\n";
+                str = str + u+";"+vost_0+";"+cev_0+";"+N+"\n";//+ve2[0]+";"+ve2[1]+";"+ve2[2]+";"+ve2[3]+";"+ve2[4]+";"+ve2[5]+"\n";
+//
+//                //double[] ve1 =runge(vect,u);;//SumVec(ProvBuf.get(ii), UmChis(FunUgl(ProvBuf.get(ii),u), h));;// FunUgl(ve,u);
+//                //double[] ve2 =SumVec(ve1, UmChis(FunUgl(ve1,u), h));;// FunUgl(ve,u);
+//                double[] ve2 = runge(vect,u);
+//                //ve2 = new double[]{1644.3153409213035, 3841.024535482519, 4868.772812626712, -4.270257643742819, 1.2148600947736947, 0.3012326617518336};
+//               // System.out.println(ve2[0]+" "+ve2[1]+" "+ve2[2]+" "+ve2[3]+" "+ve2[4]+" "+ve2[5]+"\n");
+//                double[] FiLa = GetFila(new double[]{ve2[0],ve2[1],ve2[2]});
+//
+//                double cev = (FiLa[0]*(180/Math.PI) - FiLa1[0]*(180/Math.PI))*RZ;
+//                double vost = (  FiLa[1]*(180/Math.PI)- FiLa1[1]*(180/Math.PI))*RZ*Math.cos(FiLa1[0]);
+//                P = PO(new double[]{ve2[0],ve2[1],ve2[2]});
+//                //System.out.println("P = "+P);
+//                v = Math.sqrt(Math.pow(ve2[3], 2) + Math.pow(ve2[4], 2) + Math.pow(ve2[5], 2));
+//                double N = cx*Math.sqrt(1+Math.pow(K,2))*((P*Math.pow(v,2)*Smid)/(2*m*g0));
+//                str = str + u+";"+vost+";"+cev+";"+N+"\n";//+ve2[0]+";"+ve2[1]+";"+ve2[2]+";"+ve2[3]+";"+ve2[4]+";"+ve2[5]+"\n";
             }
+            ii++;
         }
         TextIn(str, "Polet.txt");
 //        for(int i=100;i>=5;i--){
@@ -344,17 +386,18 @@ public class KA {
         Exit[1] = Vy;
         Exit[2] = Vz;
         P = PO(xyz);
+
         //System.out.println("p = "+P);
         Exit[3] = ((-u / Math.pow(r, 3)) * x - cx * (Smid / (2 * m)) * P * V * Vx +
-                K * cx * (Smid / (2 * m)) * P * Math.pow(V, 2) * (m1 * Math.cos(Ugl) + l1 * Math.sin(Ugl))
+                K * cx * (Smid / (2 * m)) * P * Math.pow(V, 2) * (m1 * Math.cos(Ugl*(180/Math.PI)) + l1 * Math.sin(Ugl*(180/Math.PI)))
                 + x * Math.pow(w, 2) + 2 * w * Vy);
 
         Exit[4] = ((-u / Math.pow(r, 3)) * y - cx * (Smid / (2 * m)) * P * V * Vy +
-                K * cx * (Smid / (2 * m)) * P * Math.pow(V, 2) * (m2 * Math.cos(Ugl) + l2 * Math.sin(Ugl))
+                K * cx * (Smid / (2 * m)) * P * Math.pow(V, 2) * (m2 * Math.cos(Ugl*(180/Math.PI)) + l2 * Math.sin(Ugl*(180/Math.PI)))
                 + y * Math.pow(w, 2) - 2 * w * Vx);
 
         Exit[5] = ((-u / Math.pow(r, 3)) * z - cx * (Smid / (2 * m)) * P * V * Vz +
-                K * cx * (Smid / (2 * m)) * P * Math.pow(V, 2) * (m3 * Math.cos(Ugl) + l3 * Math.sin(Ugl)));
+                K * cx * (Smid / (2 * m)) * P * Math.pow(V, 2) * (m3 * Math.cos(Ugl*(180/Math.PI)) + l3 * Math.sin(Ugl*(180/Math.PI))));
 
         return Exit;
     }
@@ -398,11 +441,100 @@ public class KA {
         }
     }
 
+    public static double[] right(double[] vect, double gam){
+        double c_xa = 1.3;
+        double S_mid = 15 * Math.pow(10,-6);
+        double m = 8000;
+        double mu = 398600;
+        double omega = 7.292115855 * Math.pow(10,-5);
+        double K = 0.3;
+
+        gam = gam*(Math.PI/180);
+
+        double[] res = new double[6];
+
+        double r = Math.sqrt(Math.pow(vect[0], 2) + Math.pow(vect[1], 2) + Math.pow(vect[2], 2));
+        double V = Math.sqrt(Math.pow(vect[3], 2) + Math.pow(vect[4], 2) + Math.pow(vect[5], 2));
+        double[] xyz = {vect[0], vect[1], vect[2]};
+        double[] VV =  {vect[3], vect[4], vect[5]};
+        double[] VR = VectProizv(VV, xyz);
+        double VRP = Math.sqrt(Math.pow(VR[0], 2) + Math.pow(VR[1], 2) + Math.pow(VR[2], 2));
+        for (int i = 0; i < VR.length; i++) {
+            VR[i] = VR[i] / VRP;
+        }
+        double[] mm = VectProizv(VR, VV);
+        double mmm = Math.sqrt(Math.pow(mm[0], 2) + Math.pow(mm[1], 2) + Math.pow(mm[2], 2));
+        for (int i = 0; i < mm.length; i++) {
+            mm[i] = mm[i] / mmm;
+        }
+        double m1 = mm[0];
+        double m2 = mm[1];
+        double m3 = mm[2];
+        double l1 = VR[0];
+        double l2 = VR[1];
+        double l3 = VR[2];
+        double ro = PO(xyz);
+
+        //# первые три уравнения
+        res[0] = VV[0];
+        res[1] = VV[1];
+        res[2] = VV[2];
+        double x = xyz[0];
+        double y = xyz[1];
+        double z = xyz[2];
+        double Vx = VV[0];
+        double Vy = VV[1];
+        double Vz = VV[2];
+        res[3] = ((-mu / Math.pow(r, 3)) * x - c_xa * (S_mid / (2 * m)) * ro * V * Vx +
+                K * c_xa * (S_mid / (2 * m)) * ro * Math.pow(V, 2) * (m1 * Math.cos(gam) + l1 * Math.sin(gam))
+                + x * Math.pow(omega, 2) + 2 * omega * Vy);
+
+        res[4] = ((-mu / Math.pow(r, 3)) * y - c_xa * (S_mid / (2 * m)) * ro * V * Vy +
+                K * c_xa * (S_mid / (2 * m)) * ro * Math.pow(V, 2) * (m2 * Math.cos(gam) + l2 * Math.sin(gam))
+                + y * Math.pow(omega, 2) - 2 * omega * Vx);
+
+        res[5] = ((-mu / Math.pow(r, 3)) * z - c_xa * (S_mid / (2 * m)) * ro * V * Vz +
+                K * c_xa * (S_mid / (2 * m)) * ro * Math.pow(V, 2) * (m3 * Math.cos(gam) + l3 * Math.sin(gam)));
+        return res;
+    }
+    public static double[] runge(double[] vect, double gam){
+        double h=0.2;
+        double[] res = new double[6];
+        double[] k1 = right(vect, gam);
+        double[] A = vekchi(k1, h * 0.5);
+        double[] k2 = right(sum_ve(vect, A), gam);
+        double[] k3 = right( sum_ve(vect, vekchi(k2, h * 0.5)), gam);
+        double[] k4 = right(sum_ve(vect, vekchi(k3,h)), gam);
+
+        double[] tmp = sum_ve(k1, k4);
+        tmp = sum_ve(tmp, vekchi(k2,2));
+        tmp = sum_ve(tmp, vekchi( k3,2));
+        tmp = vekchi(tmp,h / 6 );
+        res = sum_ve(vect, tmp);
+        return res;
+    }
     public static double[] VectProizv(double[] A, double[] B) {
         double[] Exit = new double[A.length];
         for (int i = 0; i < 3; i++) {
             Exit[i] = A[(i + 1) % 3] * B[(i + 2) % 3] - A[(i + 2) % 3] * B[(i + 1) % 3];
         }
         return Exit;
+    }
+    //Умножение вектора на число
+    public static double[] vekchi(double A[], double B) {
+        double[] C = new double[A.length];
+        for (int i = 0; i < A.length; i++) {
+            C[i] = A[i]*B;
+        }
+        return C;
+    }
+    //Сумма векторов
+    public static double[] sum_ve(double A[], double B[]) {
+        double[] C = new double[A.length];
+        for (int i = 0; i < A.length; i++) {
+            C[i] = A[i]+B[i];
+
+        }
+        return C;
     }
 }
