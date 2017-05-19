@@ -47,7 +47,7 @@ public class KA {
     public static double yvx = 45;// Угол входа
     //Таблица для плотности
     public static double[][] Plot =
-                    {{0,     288.15,  -0.0065,  1.24915236 *Math.pow(10,-1)},
+            {{0,     288.15,  -0.0065,  1.24915236 *Math.pow(10,-1)},
                     {11,     216.65,  -0.0065,  3.71093080 *Math.pow(10,-2)},
                     {20,     216.65,   0,       8.97702069 *Math.pow(10,-3)},
                     {32,     228.65,   0.0010,  1.34856449 *Math.pow(10,-3)},
@@ -201,7 +201,7 @@ public class KA {
         //double[] Dima10 = new double[]{1571.346241894644, 3887.1571224570048, 4803.5059919596033, -0.048859589280481987, -0.063638928291775615, -0.09562669122723165};
         //System.out.println("============================================= ");
         for(double[] ve:ProvSost){
-           // ve = Dima10;
+            // ve = Dima10;
             //Массив с высотами (50,45...)
             str = str+"Высота = "+ProvSostV.get(ii)+"\n";
             str = str + "Угол;Вост;Сев;n"+"\n";
@@ -212,13 +212,29 @@ public class KA {
                 //Интегрирование с другим углом
                 double he = ProvSostV.get(ii);
                 double[] ve_0_ = runge(ve,u);
-                double[] ve2 = ve_0_;
+                //double[] ve2 = ve_0_;
+                double N2 = 0;
+               // System.out.println("he = "+he);
                 while(he >5){
                     //Расчёт высоты
-                    he =  Math.sqrt(Math.pow(ve_0_[0], 2) + Math.pow(ve_0_[1], 2) + Math.pow(ve_0_[2], 2)) -
-                            Rekv * (1 - (fcg * Math.pow(ve_0_[2], 2)) / (Math.pow(ve_0_[0], 2) + Math.pow(ve_0_[1], 2) + Math.pow(ve_0_[2], 2)));
                     //Интегрирование
                     ve_0_ = runge(ve_0_,u);
+                    double P2 = PO(new double[]{ve_0_[0],ve_0_[1],ve_0_[2]});
+                    //System.out.println(P2);
+                    v =  Math.sqrt(Math.pow(ve_0_[3], 2) + Math.pow(ve_0_[4], 2) + Math.pow(ve_0_[5], 2));
+                    //System.out.println(v);
+                    double N = cx*Math.sqrt(1+Math.pow(K,2))*((P2*Math.pow(v,2)*Smid)/(2*m*g0));
+                    if(he==ProvSostV.get(ii)){
+                        N2 = N;
+                    }else{
+                        if(N>N2){
+                            N2 = N;
+                        }
+                    }
+                    //System.out.println("N2 = "+N2);
+                    he =  Math.sqrt(Math.pow(ve_0_[0], 2) + Math.pow(ve_0_[1], 2) + Math.pow(ve_0_[2], 2)) -
+                            Rekv * (1 - (fcg * Math.pow(ve_0_[2], 2)) / (Math.pow(ve_0_[0], 2) + Math.pow(ve_0_[1], 2) + Math.pow(ve_0_[2], 2)));
+
                 }
                 //Фи и лямбда полученного последнего вектора состояния
                 double[] FiLa_01 = GetFila(new double[]{ve_0_[0],ve_0_[1],ve_0_[2]});//*(180/Math.PI)
@@ -228,12 +244,12 @@ public class KA {
                 double vost_0 = ((FiLa_01[1]- FiLa1[1]))*RZ*Math.cos(FiLa1[0]);//*Math.PI/180)*180/Math.PI;
 
                 //double g1 = 9.80665;
-                double P2 = PO(new double[]{ve_0_[0],ve_0_[1],ve_0_[2]});
+                //double P2 = PO(new double[]{ve_0_[0],ve_0_[1],ve_0_[2]});
 //                System.out.println("ve_0_[0] = "+ve_0_[0]+" ve_0_[1 = "+ve_0_[1]+" ve_0_[2] = "+ve_0_[2]+"\n");
 
 //                System.out.println("p = "+P);
-                double N = cx*Math.sqrt(1+Math.pow(K,2))*((P2*Math.pow(v,2)*Smid)/(2*m*g0));
-                str = str + u+";"+vost_0/100+";"+cev_0/100+";"+N+"\n";
+                //double N = cx*Math.sqrt(1+Math.pow(K,2))*((P2*Math.pow(v,2)*Smid)/(2*m*g0));
+                str = str + u+";"+vost_0/100+";"+cev_0/100+";"+N2+"\n";
             }
 
 //            for(double u:Ugl){
