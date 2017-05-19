@@ -8,7 +8,7 @@ import static java.lang.Math.*;
 /**
  * Created by Vavi on 02.04.2017.
  */
-public class KA {
+public class KA3 {
     public static double Rysl = 6356.766; //Условный радиус Земли метры км
     public static double RZ = 6371; //радиус Земли метры км
     public static double g0 = 9.80665 *Math.pow(10,-3);//ускор своб пад км
@@ -47,7 +47,7 @@ public class KA {
     public static double yvx = 45;// Угол входа
     //Таблица для плотности
     public static double[][] Plot =
-                    {{0,     288.15,  -0.0065,  1.24915236 *Math.pow(10,-1)},
+            {{0,     288.15,  -0.0065,  1.24915236 *Math.pow(10,-1)},
                     {11,     216.65,  -0.0065,  3.71093080 *Math.pow(10,-2)},
                     {20,     216.65,   0,       8.97702069 *Math.pow(10,-3)},
                     {32,     228.65,   0.0010,  1.34856449 *Math.pow(10,-3)},
@@ -201,7 +201,7 @@ public class KA {
         //double[] Dima10 = new double[]{1571.346241894644, 3887.1571224570048, 4803.5059919596033, -0.048859589280481987, -0.063638928291775615, -0.09562669122723165};
         //System.out.println("============================================= ");
         for(double[] ve:ProvSost){
-           // ve = Dima10;
+            // ve = Dima10;
             //Массив с высотами (50,45...)
             str = str+"Высота = "+ProvSostV.get(ii)+"\n";
             str = str + "Угол;Вост;Сев;n"+"\n";
